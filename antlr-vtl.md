@@ -84,6 +84,29 @@ Import the project in your favorite IDE, and rename the resource class from `MyR
 
 To verify that the name changes did not break the service, run `mvn clean test` in the command prompt.
 
+Let us now adapt the resource class to our needs. First, we want the service to take a string parameter corresponding to the VTL expression, so let us modify the `getIt()` method as follows:
+
+```
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getIt(@QueryParam("expression") String expression) {
+        return expression;
+    }
+```
+
+The test class should be changed also:
+
+```
+    @Test
+    public void testGetIt() {
+
+    	String expression = "DS_r := DS_1[calc Me_2 := upper(Me_1)]";
+        String responseMsg = target.path("tree").queryParam("expression", expression).request().get(String.class);
+        assertEquals(expression, responseMsg);
+    }
+```
+
 ### In JavaScript
 
 ## References
