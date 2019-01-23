@@ -72,13 +72,17 @@ This creates the JavaScript lexer, parser, listener and visitor in the working d
 
 ### In Java
 
-For an example of how to use the VTL parser in Java, we will write a web service taking a VTL expression and returning the parse tree as text.
+For an example of how to use the VTL parser in Java, we will write a web service taking a VTL expression and returning the corresponding parse tree as text.
 
-We will use the [quick start example](https://jersey.github.io/documentation/latest/getting-started.html) provided by GlassFish Jersey. If needed, install [Maven](https://maven.apache.org/) and run the following command:
+We will use the [quick start example](https://jersey.github.io/documentation/latest/getting-started.html) provided by GlassFish Jersey. If needed, install [Maven](https://maven.apache.org/), then run the following command:
 
 ```
-mvn archetype:generate -DarchetypeArtifactId=jersey-quickstart-grizzly2 -DarchetypeGroupId=org.glassfish.jersey.archetypes -DinteractiveMode=false -DgroupId=test.insee.vtl -DartifactId=vtl-service -Dpackage=test.insee.vtl -DarchetypeVersion=2.27
+mvn archetype:generate -DarchetypeArtifactId=jersey-quickstart-grizzly2 -DarchetypeGroupId=org.glassfish.jersey.archetypes -DinteractiveMode=false -DgroupId=fr.insee.vtl -DartifactId=vtl-service -Dpackage=fr.insee.vtl -DarchetypeVersion=2.27
 ```
+
+Import the project in your favorite IDE, and rename the resource class from `MyResource` to something more meaningful, for example `Tree`. Rename accordingly the test class (`MyResourceTest` to `TreeTest`). Similarly, we can modify the path element where the service will be exposed: change `@Path("myresource")` to `@Path("tree")` in the resource class and `target.path("myresource")` to `target.path("tree")` in the test class.
+
+To verify that the name changes did not break the service, run `mvn clean test` in the command prompt.
 
 ### In JavaScript
 
