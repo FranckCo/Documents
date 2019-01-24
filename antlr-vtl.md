@@ -107,11 +107,13 @@ The test class should be changed also:
     }
 ```
 
+The expression received by the service must be submitted to the VTL parser, so we should include this parser in the project. The easiest way to do that is described [here](https://tomassetti.me/antlr-mega-tutorial/#java-setup).
+
 ### In JavaScript
 
 ## References
 
-  * The [Antler 4 Documentation](https://github.com/antlr/antlr4/blob/master/doc/index.md)
+  * The [Antlr 4 Documentation](https://github.com/antlr/antlr4/blob/master/doc/index.md)
   * The [Antlr Mega Tutorial](https://tomassetti.me/antlr-mega-tutorial/) by Federico Tomassetti
   * [Compiler in JavaScript using ANTLR](https://medium.com/dailyjs/compiler-in-javascript-using-antlr-9ec53fd2780f) by Alena Khineika
   
