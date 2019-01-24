@@ -4,7 +4,7 @@ This paper describes how to use the [Antlr](https://www.antlr.org) parser genera
 
 Antlr is a powerful tool that can generate parsers for languages described by formal grammars. These parsers can automatically build parse trees, which are data structures explaining how the language represents a given expression.
 
-Le language used here is [VTL 2.0](https://sdmx.org/?page_id=5096), the Validation and Transformation Language published by the SDMX initiative. VTL has a grammar which is expressed in EBNF notation (Extended Backus-Naur Form).
+The language used here is [VTL 2.0](https://sdmx.org/?page_id=5096), the Validation and Transformation Language published by the SDMX initiative. VTL has a grammar which is expressed in EBNF notation (Extended Backus-Naur Form).
 
 ## Creation of the VTL parsers
 
@@ -82,7 +82,7 @@ mvn archetype:generate -DarchetypeArtifactId=jersey-quickstart-grizzly2 -Darchet
 
 Import the project in your favorite IDE, and rename the resource class from `MyResource` to something more meaningful, for example `Tree`. Rename accordingly the test class (`MyResourceTest` to `TreeTest`). Similarly, we can modify the path element where the service will be exposed: change `@Path("myresource")` to `@Path("tree")` in the resource class and `target.path("myresource")` to `target.path("tree")` in the test class.
 
-To verify that the name changes did not break the service, run `mvn clean test` in the command prompt.
+To verify that the name changes did not break the service, run `mvn clean test` in the command prompt or from the IDE.
 
 Let us now adapt the resource class to our needs. First, we want the service to take a string parameter corresponding to the VTL expression, so let us modify the `getIt()` method as follows:
 
@@ -107,7 +107,14 @@ The test class should be changed also:
     }
 ```
 
-The expression received by the service must be submitted to the VTL parser, so we should include this parser in the project. The easiest way to do that is described [here](https://tomassetti.me/antlr-mega-tutorial/#java-setup).
+The expression received by the service must be submitted to the VTL parser, so we should include this parser in the project. The easiest way to do that is described in [section 4.2](https://tomassetti.me/antlr-mega-tutorial/#java-setup) of the Antlr Mega Tutorial:
+
+* Add `<antlr4.visitor>true</antlr4.visitor>` in the `<properties>` section of the POM file (actually; we won't need the visitor here, but it can be useful later if we want to enrich the service).
+* It may be a good idea to also add a property for the Antlr version: `<antlr.version>4.7.2</antlr.version>`.
+* Add the Antlr dependency and plugin as indicated in the tutorial, making sure to replace in each case the version tag by `<version>${antlr.version}</version>`.
+* The plugin expects grammar file in the `src\main\antlr4` folder, so this is where we will put our `Vtl.g4` and `VtlTokens.g4` files. In order to have the generated classes belong to a named Java package, we will actually put the main grammar file `Vtl.g4` in the `src\main\antlr4\fr\insee\vtl` folder and the imported `VtlTokens.g4` file in `src\main\antlr4\imports` (see the [usage documentation](https://www.antlr.org/api/maven-plugin/latest/usage.html)).
+
+To verify that the configuration is good, run `mvn generate-sources` in the command prompt or from the IDE.
 
 ### In JavaScript
 
