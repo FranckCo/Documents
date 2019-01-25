@@ -116,6 +116,71 @@ The expression received by the service must be submitted to the VTL parser, so w
 
 To verify that the configuration is good, run `mvn generate-sources` in the command prompt or from the IDE.
 
+We can now add the business logic in our service. We want to mimic the functionalities of the `org.antlr.v4.gui.TestRig` class, and indeed we could simply create an instance of `TestRig` and feed it the right parametes, but that would prevent us to manage exceptions directly, so we will instead copy the relevant parts of the [class code](https://github.com/antlr/antlr4/blob/master/tool/src/org/antlr/v4/gui/TestRig.java) and replace the content of the `getIt()` method with the following lines.
+
+First, we don't simply return the string received anymore, so we need to declare a result string; we will also need a class loader:
+
+```
+    	String result = null;
+    	ClassLoader loader = Thread.currentThread().getContextClassLoader();
+```
+
+We then create a VTL lexer:
+
+```
+    	Lexer lexer = null;
+		try {
+	    	Class<? extends Lexer> lexerClass = loader.loadClass("fr.insee.vtl.VtlLexer").asSubclass(Lexer.class);
+			Constructor<? extends Lexer> lexerConstructor = lexerClass.getConstructor(CharStream.class);
+			lexer = lexerConstructor.newInstance((CharStream)null);
+		} catch (Exception e) {
+			result = "Error on lexer initialization: " + e.getMessage();
+		}
+```
+
+And a VTL parser:
+
+```
+		Class<? extends Parser> parserClass = null;
+		Parser parser = null;
+		try {
+			parserClass = loader.loadClass("fr.insee.vtl.VtlParser").asSubclass(Parser.class);
+			Constructor<? extends Parser> parserCtor = parserClass.getConstructor(TokenStream.class);
+			parser = parserCtor.newInstance((TokenStream)null);
+			parser.setBuildParseTree(true);
+		} catch (Exception e) {
+			result = "Error on parser initialization: " + e.getMessage();
+		}
+```
+
+The VTL expression received is then tokenized by the lexer:
+
+```
+		try {
+			CharStream charStream = CharStreams.fromStream(new ByteArrayInputStream(expression.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
+			lexer.setInputStream(charStream);
+			CommonTokenStream tokens = new CommonTokenStream(lexer);
+			tokens.fill();
+			parser.setTokenStream(tokens);
+		} catch (Exception e) {
+			result = "Error on lexer execution: " + e.getMessage();
+		}
+```
+
+Finally, we execute the parser and send back the result:
+
+```
+		try {
+			Method startRule = parserClass.getMethod("start"); // 'start' is the name of the top VTL rule
+			ParserRuleContext tree = (ParserRuleContext)startRule.invoke(parser, (Object[])null);
+			result = tree.toStringTree(parser);
+		} catch (Exception e) {
+			result = "Error on parser execution: " + e.getMessage();
+		}
+
+		return result;
+```
+
 ### In JavaScript
 
 ## References
