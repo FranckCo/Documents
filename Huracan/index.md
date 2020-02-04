@@ -1,3 +1,5 @@
+<img align="right" src="img/huracan.gif" alt="Huracan"/>
+
 ## Introduction
 
 The aim of this project is to explore the possible uses of recent concepts like self-sovereign identity and verifiable claims in GLEIS procedures.
