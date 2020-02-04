@@ -18,6 +18,10 @@ This page presents Insee's feedback regarding those publications
 
 ### Combined Nomenclature
 
+#### Multiple notations
+
+According to the [SKOS Reference](https://www.w3.org/TR/skos-reference/#L2637), "It is not common practice to assign more than one notation from the same notation system (i.e., with the same datatype URI)". An example in the CN2018 is http://publications.europa.eu/resource/authority/cn2019/010221, which has two values for `skos:notation`, without datatype (thus defaulting to the same datatype).
+
 ### Classification of Products by Activity
 
 ### SDMX Glossary 2018
